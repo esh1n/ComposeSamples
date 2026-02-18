@@ -18,10 +18,10 @@ import androidx.compose.ui.tooling.preview.Preview
 private const val TAG = "ClickCountWithCheckBox"
 
 @Composable
-fun ClickCountWithCheckBox() {
-    Column() {
+fun ClickCountWithCheckBox(modifier: Modifier) {
+    Column(modifier = modifier) {
         val counter = remember {
-            mutableStateOf(5)
+            mutableIntStateOf(5)
         }
         val isUpperCase = remember { mutableStateOf(false) }
         Row(
@@ -35,7 +35,7 @@ fun ClickCountWithCheckBox() {
                 onCheckedChange = { isUpperCase.value = it }
             )
         }
-        ClickCounter(isUpperCase.value, counter.value) { counter.value++ }
+        ClickCounter(isUpperCase.value, counter.intValue) { counter.intValue++ }
     }
 }
 
@@ -46,6 +46,7 @@ fun ClickCounter(isUpperCase: Boolean, count: Int, onClick: () -> Unit) {
             EvenOdd(isUpperCase)
         }
         Text(text = "Count: ${count}! even? : ${evenOdd.check(count)}")
+        Text(text = "Log: evenOdd : ${evenOdd.toString()}")
         Text(
             text = "Нажми тут",
             modifier = Modifier.clickable { onClick() })
@@ -60,23 +61,4 @@ fun DefaultPreview() {
         mutableIntStateOf(5)
     }
     ClickCounter(false, counter.intValue, {})
-}
-
-class EvenOdd(private val isUpperCase: Boolean) {
-    fun check(value: Int): String {
-        val result = if (value % 2 == 0) {
-            "even"
-        } else {
-            "odd"
-        }
-        return if (isUpperCase) {
-            result.uppercase()
-        } else {
-            result
-        }
-    }
-
-    override fun toString(): String {
-        return "EvenOdd(isUpperCase=$isUpperCase) hashcode ${hashCode()}"
-    }
 }
